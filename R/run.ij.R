@@ -1,4 +1,4 @@
-run.ij <- function(path.imagej = NULL, set.memory = 4, set.directory, distance.pixel = 826, known.distance = 21, trim.pixel = 20, low.circ = 0, upper.circ = 1, low.size = 0.7, upper.size = "Infinity", prefix="\\.|-",log=F,check.image=F,save.image=F){
+run.ij <- function(path.imagej = NULL, set.memory = 4, set.directory, distance.pixel = 826, known.distance = 21, trim.pixel = 20, trim.pixel2 = 0, low.circ = 0, upper.circ = 1, low.size = 0.7, upper.size = "Infinity", prefix="\\.|-",log=F,check.image=F,save.image=F){
 
 file.list <- list.files(set.directory, recursive = TRUE, full.names = TRUE, pattern = ".jpeg$|.jpg$|.tif$|.tiff$", ignore.case = TRUE)
 
@@ -57,11 +57,27 @@ if (os == "windows"){temp <- paste(tempdir(),"\\",sep="")
 temp <- gsub("\\\\","\\\\\\\\",temp)} else {temp <- paste(tempdir(),"/",sep="")
 }
 
-if(save.image){ 
-   macro <- paste('dir = getArgument;\n dir2 = "',temp,'";\n list = getFileList(dir);\n open(dir + list[0]);\n run("Set Scale...", "distance=',distance.pixel, ' known=',known.distance, ' pixel=1 unit=cm global");\n for (i=0;\n i<list.length;\n i++) { open(dir + list[i]);\n width = getWidth() - ',trim.pixel, ';\n height = getHeight() -',trim.pixel,' ;\n run("Canvas Size...", "width=" + width + " height=" + height + " position=Bottom-Center");\n run("8-bit");\n run("Threshold...");\n setAutoThreshold("Minimum");\n run("Analyze Particles...", "size=',size.arg,' circularity=',circ.arg,' show=Masks display clear record");\n saveAs("Measurements", dir2+list[i]+".txt");\n saveAs("tiff", dir+list[i]+ "_mask.tif");\n}',sep="") 
+   macro <- paste0('dir = getArgument;\n dir2 = "', temp,
+                  '";\n list = getFileList(dir);\n open(dir + list[0]);\n run("Set Scale...","distance=', distance.pixel,
+                  ' known=', known.distance,
+                  ' pixel=1 unit=cm global");\n for (i=0;\n i<list.length;\n i++) { open(dir + list[i]);\n',
+                  ' width = getWidth() - ', trim.pixel,
+                  ' width2 = getWidth() - ', trim.pixel2,
+                  ' ;\n height = getHeight() -',trim.pixel,
+                  ' ;\n run("Canvas Size...", "width=" + width + " height=" + height + " position=Bottom-Center");\n',
+                  ' ;\n run("Canvas Size...", "width=" + width2 + " position=Center-Right");\n',
+                  ' run("8-bit");\n run("Threshold...");\n setAutoThreshold("Minimum");\n',
+                  ' run("Analyze Particles...", "size=',size.arg,
+                  ' circularity=',circ.arg,
+                  ' show=Masks display clear record");\n saveAs("Measurements", dir2+list[i]+".txt");\n',
+                  ' saveAs("tiff", dir+list[i]+ "_mask.tif");\n') 
+if(save.image){
+  macro <- paste0(macro, '}')
 } else {
-  macro <- paste('dir = getArgument;\n dir2 = "',temp,'";\n list = getFileList(dir);\n open(dir + list[0]);\n run("Set Scale...", "distance=',distance.pixel, ' known=',known.distance, ' pixel=1 unit=cm global");\n for (i=0;\n i<list.length;\n i++) { open(dir + list[i]);\n width = getWidth() - ',trim.pixel, ';\n height = getHeight() -',trim.pixel,' ;\n run("Canvas Size...", "width=" + width + " height=" + height + " position=Bottom-Center");\n run("8-bit");\n run("Threshold...");\n setAutoThreshold("Minimum");\n run("Analyze Particles...", "size=',size.arg,' circularity=',circ.arg,' show=Masks display clear record");\n saveAs("Measurements", dir2+list[i]+".txt");\n}',sep="")
+  macro <- paste0(macro, 'saveAs("Measurements", dir2+list[i]+".txt");\n}')
 }
+  
+  
 
 #prepare macro***.txt as tempfile
 tempmacro <- paste(tempfile('macro'),".txt",sep="")
