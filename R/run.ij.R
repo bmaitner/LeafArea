@@ -62,7 +62,7 @@ temp <- gsub("\\\\","\\\\\\\\",temp)} else {temp <- paste(tempdir(),"/",sep="")
                   ' known=', known.distance,
                   ' pixel=1 unit=cm global");\n for (i=0;\n i<list.length;\n i++) { open(dir + list[i]);\n',
                   ' width = getWidth() - ', trim.pixel,
-                  ' width2 = getWidth() - ', trim.pixel2,
+                  ' ;\n width2 = getWidth() - ', trim.pixel2,
                   ' ;\n height = getHeight() -',trim.pixel,
                   ' ;\n run("Canvas Size...", "width=" + width + " height=" + height + " position=Bottom-Center");\n',
                   ' ;\n run("Canvas Size...", "width=" + width2 + " height=" + height + "position=Center-Right");\n',
