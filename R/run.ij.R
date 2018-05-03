@@ -65,7 +65,7 @@ temp <- gsub("\\\\","\\\\\\\\",temp)} else {temp <- paste(tempdir(),"/",sep="")
                   ' ;\n width2 = getWidth() - ', trim.pixel2,
                   ' ;\n height = getHeight() -',trim.pixel,
                   ' ;\n run("Canvas Size...", "width=" + width + " height=" + height + " position=Bottom-Center");\n',
-                  ' ;\n run("Canvas Size...", "width=" + width2 + " height=" + height + "position=Center-Right");\n',
+                  ' ;\n run("Canvas Size...", "width=" + width2 + " height=" + height + " position=Center-Right");\n',
                   ' run("8-bit");\n run("Threshold...");\n setAutoThreshold("Minimum");\n',
                   ' run("Analyze Particles...", "size=',size.arg,
                   ' circularity=',circ.arg,
