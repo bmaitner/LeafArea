@@ -117,7 +117,7 @@ if (os == "windows"){
     unix.check <- Sys.info()["sysname"]
     if(unix.check == "Linux") {
       system(paste("java -Xmx", set.memory, "g -jar ",path.imagej,"ij.jar -ijpath ",path.imagej," ",exe,tempmacro," ", set.directory, sep = ""), wait = wait)
-    } else {system(paste("java -Xmx", set.memory, "g -jar ", path.imagej, "Contents/Resources/Java/ij.jar -ijpath ", path.imagej, " ", exe, tempmacro, " ", set.directory, sep = ""), wait = wait)
+    } else {system(paste("java -Xmx", set.memory, "g -jar ", path.imagej, "Contents/Java/ij.jar -ijpath ", path.imagej, " ", exe, tempmacro, " ", set.directory, sep = ""), wait = wait)
  }
 }
 
