@@ -44,7 +44,7 @@ if (os=="windows"){
         return("ImageJ not found")
     }
   } else if (unix.check == "Darwin"){
-      if(!file.exists(paste(path.imagej, "Contents/Resources/Java/ij.jar", sep = "")) & !file.exists(paste(path.imagej, "Contents/Resources/Java/ij.jar", sep = "/"))) {
+      if(!file.exists(paste(path.imagej, "Contents/Java/ij.jar", sep = "")) & !file.exists(paste(path.imagej, "Contents/Java/ij.jar", sep = "/"))) {
           warning("Specify the correct path to ImageJ.app")
             return("ImageJ not found")
       }
