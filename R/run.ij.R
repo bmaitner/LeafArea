@@ -1,4 +1,21 @@
-run.ij <- function(path.imagej = NULL, set.memory = 4, set.directory, distance.pixel = 826, known.distance = 21, trim.pixel = 20, trim.pixel2 = 0, low.circ = 0, upper.circ = 1, low.size = 0.7, upper.size = "Infinity", prefix="\\.|-",log=F,check.image=F,save.image=F){
+#' @param trim.pixel.right Number of pixels to trim from the right side of the scan
+#' @param trim.pixel.bottom Number of pixels to trim from the bottom of the scan
+run.ij <- function(path.imagej = NULL,
+                   set.memory = 4,
+                   set.directory,
+                   distance.pixel = 826,
+                   known.distance = 21,
+                   trim.pixel = 20,
+                   trim.pixel.right = 0,
+                   trim.pixel.top = 0,
+                   low.circ = 0,
+                   upper.circ = 1,
+                   low.size = 0.7,
+                   upper.size = "Infinity",
+                   prefix = "\\.|-",
+                   log = F,
+                   check.image = F,
+                   save.image = F){
 
 file.list <- list.files(set.directory, recursive = TRUE, full.names = TRUE, pattern = ".jpeg$|.jpg$|.tif$|.tiff$", ignore.case = TRUE)
 
@@ -57,27 +74,37 @@ if (os == "windows"){temp <- paste(tempdir(),"\\",sep="")
 temp <- gsub("\\\\","\\\\\\\\",temp)} else {temp <- paste(tempdir(),"/",sep="")
 }
 
-   macro <- paste0('dir = getArgument;\n dir2 = "', temp,
-                  '";\n list = getFileList(dir);\n open(dir + list[0]);\n run("Set Scale...","distance=', distance.pixel,
+   macro <- paste0('dir = getArgument;
+                   \n dir2 = "', temp,
+                  '";\n list = getFileList(dir);
+                      \n open(dir + list[0]);
+                      \n run("Set Scale...","distance=', distance.pixel,
                   ' known=', known.distance,
-                  ' pixel=1 unit=cm global");\n for (i=0;\n i<list.length;\n i++) { open(dir + list[i]);\n',
-                  ' width = getWidth() - ', trim.pixel,
+                  ' pixel=1 unit=cm global");
+                  \n for (i=0;\n i<list.length;\n i++) { open(dir + list[i]);
+                    \n', ' width = getWidth() - ', trim.pixel,
+
                   ' ;\n height = getHeight() -',trim.pixel,
+
                   ' ;\n run("Canvas Size...", "width=" + width + " height=" + height + " position=Bottom-Center");\n',
-                  ' ;\n width2 = getWidth() - ', trim.pixel2,
-                  ' ;\n run("Canvas Size...", "width=" + width2 + " height=" + height + " position=Center-Left");\n',
+                  ' ;\n width2 = getWidth() - ', trim.pixel.right
+                  ,
+                  ' ;\n run("Canvas Size...", "width=" + width + " height=" + height + " position=Bottom-Center");\n',
+                  ' ;\n height2 = getHeight() - ', trim.pixel.top,
+
+                  ' ;\n run("Canvas Size...", "width=" + width2 + " height=" + height2 + " position=Bottom-Left");\n',
                   ' run("8-bit");\n run("Threshold...");\n setAutoThreshold("Minimum");\n',
                   ' run("Analyze Particles...", "size=',size.arg,
                   ' circularity=',circ.arg,
                   ' show=Masks display clear record");\n saveAs("Measurements", dir2+list[i]+".txt");\n',
-                  ' saveAs("tiff", dir+list[i]+ "_mask.tif");\n') 
+                  ' saveAs("tiff", dir+list[i]+ "_mask.tif");\n')
 if(save.image){
   macro <- paste0(macro, '}')
 } else {
   macro <- paste0(macro, 'saveAs("Measurements", dir2+list[i]+".txt");\n}')
 }
-  
-  
+
+
 
 #prepare macro***.txt as tempfile
 tempmacro <- paste(tempfile('macro'),".txt",sep="")
